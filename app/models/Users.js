@@ -7,15 +7,19 @@ import {compareString} from "../utils/utils.js";
  * ORDER BY
  * LIMIT
  */
+
 class Users extends Model{
+
     constructor(){
         super(); 
+        this.connect();
     }
+    
     #verifyTable(table){
         if(!table.trim() && compareString(table) != compareString(Users.name)){
             this.table = Users.name.toLocaleLowerCase();           
         }else{
-            this.table = cleanNfdAndLowerString(table);
+            this.table = compareString(table);
         }
     }
     /**
@@ -34,7 +38,7 @@ class Users extends Model{
      * @param {object} options - table=Users.name | string, fields= array | '*', groupBy= string | '', orderBy= string | '', limit= string | ''
      * @returns Promise<getUserByUser()>
      */
-    async setUserUser(user, options = {}){
+    async setUserOfUser(user, options = {}){
         this.user = user;
         return await this.#getUserByUser(options);
     }
@@ -52,17 +56,20 @@ class Users extends Model{
      */
        async getAllUsers({table=Users.name, fields=["*"], data=[], where='', groupBy='', orderBy='', limit=''} = ''){
         this.#verifyTable(table);
-        const con = await this.connection();
         let sql = `SELECT ${[...fields]} FROM ${this.table} ${where ? `WHERE ${where}`:''} ${groupBy ? `GROUP BY ${groupBy}`:''} ${orderBy ? `ORDER BY ${orderBy}`:''} ${limit ? `LIMIT ${limit}`:''}`.trim();
         try{
-            const [users] = await con.query(sql, data);
+            const [users] = await this.connection.query(sql, data);
             return {
                 error:false,
                 rowsCount: users.length,
                 data:users,
             };
-        }catch(error){
-            throw new Error("Ocorreu um erro na hora de buscar os usuários");
+        }catch(err){
+            return {
+                error:true,
+                message:"Não foi possível obter todos os usuários no momento.",
+                err:err,
+            }
         }
     }
     async #getUserByUser({table=Users.name, fields=["*"], groupBy='', orderBy='', limit=''} = ''){
@@ -70,17 +77,21 @@ class Users extends Model{
             throw new Error("É preciso informar o id do usuário com o método setUserId")
         }
         this.#verifyTable(table);
-        const con = await this.connection();
         let sql = `SELECT ${[...fields]} FROM ${this.table} WHERE user = ? ${groupBy ? `GROUP BY ${groupBy}`:''} ${orderBy ? `ORDER BY ${orderBy}`:''} ${limit ? `LIMIT ${limit}`:''}`.trim();
         try{
-            const [user] = await con.query(sql, [this.getUserUser()]);
+            const [user] = await this.connection.query(sql, [this.getUserUser()]);
             return {
                 error:false,
-                rowsCount: user.length,
+                metadata:{
+                    rowsCount: user.length,
+                },
                 data:user,
             };
-        }catch(error){
-            throw new Error("Ocorreu um erro na hora de buscar os usuários");
+        }catch(err){
+            return {
+                error:true,
+                message:"Não foi possível obter o usuário pelo user no momento.",
+            }
         }
     }
     async #getUserById({table=Users.name, fields=["*"], groupBy='', orderBy='', limit=''} = ''){
@@ -88,18 +99,23 @@ class Users extends Model{
             throw new Error("É preciso informar o id do usuário com o método setUserId")
         }
         this.#verifyTable(table);
-        const con = await this.connection();
         let sql = `SELECT ${[...fields]} FROM ${this.table} WHERE id = ? ${groupBy ? `GROUP BY ${groupBy}`:''} ${orderBy ? `ORDER BY ${orderBy}`:''} ${limit ? `LIMIT ${limit}`:''}`.trim();
         try{
-            const [user] = await con.query(sql, [this.getUserId()]);
+
+            const [user] = await this.connection.query(sql, [this.getUserId()]);
             return {
                 error:false,
                 rowsCount: user.length,
                 data:user,
             };
-        }catch(error){
-            throw new Error("Ocorreu um erro na hora de buscar os usuários");
+        }catch(err){
+            return {
+                error:true,
+                message:"Não foi possível obter o usuário pelo id no momento",
+                err:err,
+            }
         }
+
     }
 }
 

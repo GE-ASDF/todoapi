@@ -1,6 +1,7 @@
 import dotenv from "dotenv"
 dotenv.config();
 
+
 export const config = {
     URL_FRONTEND: process.env.URL_FRONTEND,
     PORT_BACKEND: process.env.PORT_BACKEND,
@@ -11,5 +12,15 @@ export const config = {
         password:process.env.PASS_DB,
         database:process.env.DBNAME,
         port:process.env.PORT_DB
+    },
+    SESSION_CONFIG:{
+        key:"LOGIN_USER",
+        secret:"LOGIN_USER",
+        resave:false,
+        saveUninitialized:false,
+        cookie:{
+            maxAge:3600 * 1000 * 24,
+            httpOnly:false
+        }
     }
 }
