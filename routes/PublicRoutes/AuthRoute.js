@@ -7,7 +7,7 @@ import {authMiddleware} from "../../app/middlewares/authMiddleaware.js";
 const AuthRoute = Router();
 
 
-AuthRoute.get("/:user?/:password?/authenticate",UsersValidations.auth, UsersValidations.checkRules, AuthService.auth)
+AuthRoute.post("/authenticate", csrfProtection, UsersValidations.auth, UsersValidations.checkRules, AuthService.auth)
 AuthRoute.get("/verify", authMiddleware, AuthController.verify)
 
 AuthRoute.get("/csrfToken", csrfProtection, (req, res)=> {
