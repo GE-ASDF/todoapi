@@ -16,7 +16,7 @@ class App{
    }
 
    #routes(){
-     this.server.use(AuthRoute)
+     this.server.use("/auth", AuthRoute)
    }
 
    #createApp(){
@@ -31,6 +31,7 @@ class App{
         this.server.use(bodyParser.urlencoded({extended: true, limit:"50mb", parameterLimit:50000}))
         this.server.use(bodyParser.json())
    }
+
 }
 
 export default new App;

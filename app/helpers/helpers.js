@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import {config} from "../../config/config";
+import {config} from "../../config/config.js";
 
 /**
  * Gera um token JWT para um usuário
@@ -7,5 +7,5 @@ import {config} from "../../config/config";
  * @returns string
  */
 export const generateJwt = (user)=>{
-    return jwt.sign(config.APP_SECRET, user, {expiresIn:"1d"})
+    return jwt.sign({user}, config.APP_SECRET, {expiresIn:'1d'})
 }

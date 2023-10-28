@@ -23,7 +23,7 @@ class Users extends Model{
         }
     }
     /**
-     * Define o user do usuário que deverá ser buscado e retorna  
+     * Define o user do usuário que deverá ser buscado e retorna um usuário caso encontrado
      * @param {string | number} user 
      * @param {object} options - table=Users.name | string, fields= array | '*', groupBy= string | '', orderBy= string | '', limit= string | ''
      * @returns Promise<getUserById()>
@@ -58,7 +58,7 @@ class Users extends Model{
         this.#verifyTable(table);
         let sql = `SELECT ${[...fields]} FROM ${this.table} ${where ? `WHERE ${where}`:''} ${groupBy ? `GROUP BY ${groupBy}`:''} ${orderBy ? `ORDER BY ${orderBy}`:''} ${limit ? `LIMIT ${limit}`:''}`.trim();
         try{
-            const [users] = await this.connection.query(sql, data);
+            const [users] = await this.connection.execute(sql, data);
             return {
                 error:false,
                 rowsCount: users.length,
@@ -79,7 +79,7 @@ class Users extends Model{
         this.#verifyTable(table);
         let sql = `SELECT ${[...fields]} FROM ${this.table} WHERE user = ? ${groupBy ? `GROUP BY ${groupBy}`:''} ${orderBy ? `ORDER BY ${orderBy}`:''} ${limit ? `LIMIT ${limit}`:''}`.trim();
         try{
-            const [user] = await this.connection.query(sql, [this.getUserUser()]);
+            const [user] = await this.connection.execute(sql, [this.getUserUser()]);
             return {
                 error:false,
                 metadata:{
@@ -102,7 +102,7 @@ class Users extends Model{
         let sql = `SELECT ${[...fields]} FROM ${this.table} WHERE id = ? ${groupBy ? `GROUP BY ${groupBy}`:''} ${orderBy ? `ORDER BY ${orderBy}`:''} ${limit ? `LIMIT ${limit}`:''}`.trim();
         try{
 
-            const [user] = await this.connection.query(sql, [this.getUserId()]);
+            const [user] = await this.connection.execute(sql, [this.getUserId()]);
             return {
                 error:false,
                 rowsCount: user.length,

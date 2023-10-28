@@ -1,7 +1,6 @@
 import dotenv from "dotenv"
 dotenv.config();
 
-
 export const config = {
     URL_FRONTEND: process.env.URL_FRONTEND,
     PORT_BACKEND: process.env.PORT_BACKEND,
