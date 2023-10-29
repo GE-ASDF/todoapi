@@ -1,5 +1,5 @@
 import Users from "../../models/Users.js";
-
+import AuthService from "../../services/AuthService.js";
 class AuthController{
     async verify(req, res){
         if(req.session.user != undefined){
@@ -15,6 +15,9 @@ class AuthController{
                 message: 'Não há sessão de usuário ativa',
             })
         }
+    }
+    async authenticate(req, res){
+        return AuthService.auth(req, res);
     }
 }
 

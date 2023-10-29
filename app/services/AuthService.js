@@ -13,7 +13,7 @@ class AuthService{
             if(user.metadata.rowsCount > 0){
                 const passVerify = await passwordVerify(user.data[0].password, data.password);
                 if(!passVerify){
-                    return res.status(204).json({
+                    return res.status(200).json({
                         status:"success",
                         error: true,
                         message: messages.INVALID_PASS_OR_USER
@@ -32,9 +32,9 @@ class AuthService{
                     },  
                 })
             }else{
-                return res.status(204).json({
+                return res.status(200).json({
                     status:"success",
-                    error: false,
+                    error: true,
                     message: messages.USER_NOT_FOUND
                 })
             }
